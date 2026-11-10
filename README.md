@@ -1,6 +1,6 @@
 # 🎁 Secret Santa
 
-A small web app for running a Secret Santa: create a group, add everyone's WhatsApp number, draw names, and each person gets a WhatsApp message with a private link showing who they're gifting and that person's wishlist.
+A small personal project: I wanted a Secret Santa for my friends with wishlists and WhatsApp reminders built in, and a good excuse to practise building a full-stack app from database to deployment.
 
 **Stack:** Python 3.12 · Flask · SQLAlchemy · PostgreSQL · WhatsApp Cloud API · pytest · Docker
 
