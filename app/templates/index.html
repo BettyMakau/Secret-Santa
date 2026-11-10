@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h1>Start a Secret Santa</h1>
+  <p class="muted">Create a group, add everyone's WhatsApp number, draw names, and each person gets a private link with who they're gifting and that person's wishlist.</p>
+  <form method="post" action="{{ url_for('main.create_group') }}" class="stack">
+    <label>Group name
+      <input name="name" required maxlength="120" placeholder="Office Christmas 2026">
+    </label>
+    <label>Budget <span class="muted">(optional)</span>
+      <input name="budget" maxlength="50" placeholder="KES 1,500">
+    </label>
+    <label>Gift exchange date <span class="muted">(optional)</span>
+      <input name="exchange_date" type="date">
+    </label>
+    <button type="submit">Create group</button>
+  </form>
+</section>
+{% endblock %}

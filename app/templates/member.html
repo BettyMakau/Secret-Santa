@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ member.name }} · {{ group.name }}{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Hi {{ member.name }} 👋</h1>
+  <p class="muted">{{ group.name }}
+    {% if group.budget %} · Budget: {{ group.budget }}{% endif %}
+    {% if group.exchange_date %} · Exchange: {{ group.exchange_date.strftime('%d %b %Y') }}{% endif %}
+  </p>
+</section>
+
+<section class="card highlight">
+  <h2>You're gifting…</h2>
+  {% if member.recipient %}
+    <p class="big">🎁 {{ member.recipient.name }}</p>
+    <h3>Their wishlist</h3>
+    {% if member.recipient.wishlist %}
+      <p class="wishlist">{{ member.recipient.wishlist }}</p>
+    {% else %}
+      <p class="muted">They haven't added a wishlist yet — check back later.</p>
+    {% endif %}
+  {% else %}
+    <p class="muted">Names haven't been drawn yet. You'll get a WhatsApp message when they are.</p>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h2>Your wishlist</h2>
+  <p class="muted">Your Secret Santa sees this without knowing who you are… and you won't know who they are either.</p>
+  <form method="post" class="stack">
+    <textarea name="wishlist" rows="6" maxlength="2000" placeholder="Books, a mug, anything purple…">{{ member.wishlist }}</textarea>
+    <button type="submit">Save wishlist</button>
+  </form>
+</section>
+{% endblock %}

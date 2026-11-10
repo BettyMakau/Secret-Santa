@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}{{ group.name }} · Organizer{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>{{ group.name }}</h1>
+  <p class="muted">
+    {% if group.budget %}Budget: {{ group.budget }} · {% endif %}
+    {% if group.exchange_date %}Exchange: {{ group.exchange_date.strftime('%d %b %Y') }} · {% endif %}
+    {{ group.members|length }} member(s)
+  </p>
+  <p class="note">This is your organizer page. Bookmark it — anyone with this link can manage the group.</p>
+</section>
+
+{% if not group.is_drawn %}
+<section class="card">
+  <h2>Add a member</h2>
+  <form method="post" action="{{ url_for('main.add_member', admin_token=group.admin_token) }}" class="row">
+    <input name="name" required maxlength="80" placeholder="Name">
+    <input name="phone" required placeholder="WhatsApp number, e.g. 0712 345 678">
+    <button type="submit">Add</button>
+  </form>
+</section>
+{% endif %}
+
+<section class="card">
+  <h2>Members</h2>
+  {% if group.members %}
+  <table>
+    <thead><tr><th>Name</th><th>Phone</th><th>Wishlist</th><th></th></tr></thead>
+    <tbody>
+    {% for m in group.members %}
+      <tr>
+        <td>{{ m.name }}</td>
+        <td>+{{ m.phone }}</td>
+        <td>{{ "✅" if m.wishlist else "—" }}</td>
+        <td class="actions">
+          {% if group.is_drawn %}
+            {% if m.notified_at %}<span class="pill">Notified</span>{% endif %}
+            <a href="{{ wa_links[m.id] }}" target="_blank" rel="noopener" class="link">WhatsApp link</a>
+          {% else %}
+            <form method="post" action="{{ url_for('main.remove_member', admin_token=group.admin_token, member_id=m.id) }}">
+              <button class="ghost" type="submit">Remove</button>
+            </form>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p class="muted">No members yet. You need at least 3 to draw.</p>
+  {% endif %}
+</section>
+
+<section class="card">
+  {% if not group.is_drawn %}
+    <h2>Draw names</h2>
+    <p class="muted">Once you draw, the member list is locked. Nobody can draw themselves.</p>
+    <form method="post" action="{{ url_for('main.draw', admin_token=group.admin_token) }}">
+      <button type="submit" {% if group.members|length < 3 %}disabled{% endif %}>Draw names 🎲</button>
+    </form>
+  {% else %}
+    <h2>Notify everyone</h2>
+    <p class="muted">Each person gets a WhatsApp message with their private link. Pairings are never shown on this page.</p>
+    <form method="post" action="{{ url_for('main.notify', admin_token=group.admin_token) }}">
+      <button type="submit">Send WhatsApp messages</button>
+    </form>
+  {% endif %}
+</section>
+{% endblock %}
